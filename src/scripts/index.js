@@ -5,6 +5,7 @@ const webgldetection = require('./webgldetection');
 import {rendererConfig} from './config.js';
 import AppViewer from './app-viewer';
 import AppUi from './app-ui';
+import SplinesManager from './splinesManager';
 require('three/examples/js/controls/OrbitControls');
 
 (() => {
@@ -27,6 +28,8 @@ require('three/examples/js/controls/OrbitControls');
     const scene = appViewer.scene;
     const controls = new THREE.OrbitControls(camera, canvas);
     const appUi = new AppUi();
+
+    const splinesManager = new SplinesManager(scene);
 
     const gl = renderer.getContext();
 
