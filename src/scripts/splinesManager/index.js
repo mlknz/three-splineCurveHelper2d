@@ -1,7 +1,7 @@
 const THREE = require('three');
 
 const lineMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 });
-const sphereGeometry = new THREE.SphereGeometry(0.01, 0.01, 0.01);
+const sphereGeometry = new THREE.SphereGeometry(1, 10, 10);
 const sphereMaterial = new THREE.MeshBasicMaterial({color: 0xffffff});
 class SplinesManager {
     constructor(scene) {
@@ -14,7 +14,10 @@ class SplinesManager {
         this.scene.add(this.curvesContainer);
         this.splines = [];
 
+        this.jointSize = 0.01;
+
         document.addEventListener('createSpline', this.createSpline.bind(this));
+        document.addEventListener('changeJointSize', this.changeJointSize.bind(this));
     }
 
     createSpline() {
@@ -38,6 +41,20 @@ class SplinesManager {
             jointMesh.position.x = coords.x;
             jointMesh.position.y = 0.005;
             jointMesh.position.z = coords.y;
+            jointMesh.scale.x = this.jointSize;
+            jointMesh.scale.y = this.jointSize;
+            jointMesh.scale.z = this.jointSize;
+        });
+    }
+
+    changeJointSize(e) {
+        this.jointSize = e.detail;
+        this.jointsContainer.children.forEach(splinesCont => {
+            splinesCont.children.forEach(jointMesh => {
+                jointMesh.scale.x = this.jointSize;
+                jointMesh.scale.y = this.jointSize;
+                jointMesh.scale.z = this.jointSize;
+            });
         });
     }
 }

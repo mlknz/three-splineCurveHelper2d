@@ -21,32 +21,34 @@ class AppUi {
                 document.dispatchEvent(createSplineEvent);
             }
         };
-
-        gui.add(ButtonsFunctions, 'LoadTexture');
-
         const corners = {
             leftUpX: 1,
             leftUpY: 2,
-            leftUpZ: 0,
             rightUpX: 2,
             rightUpY: 2,
-            rightUpZ: 0,
             rightDownX: 2,
-            rightDownY: 1,
-            rightDownZ: 0
+            rightDownY: 1
         };
+
+        const drawParams = {
+            jointSize: 0.01
+        };
+
+        gui.add(ButtonsFunctions, 'LoadTexture');
         const cornersFolder = gui.addFolder('Corners coordinates');
         cornersFolder.add(corners, 'leftUpX');
         cornersFolder.add(corners, 'leftUpY');
-        cornersFolder.add(corners, 'leftUpZ');
         cornersFolder.add(corners, 'rightUpX');
         cornersFolder.add(corners, 'rightUpY');
-        cornersFolder.add(corners, 'rightUpZ');
         cornersFolder.add(corners, 'rightDownX');
         cornersFolder.add(corners, 'rightDownY');
-        cornersFolder.add(corners, 'rightDownZ');
 
         gui.add(ButtonsFunctions, 'AddCurve');
+        const jointSizeController = gui.add(drawParams, 'jointSize').min(0.001).max(0.18).step(0.001);
+        jointSizeController.onFinishChange((value) => {
+            const changeJointSizeEvent = new CustomEvent('changeJointSize', { 'detail': value });
+            document.dispatchEvent(changeJointSizeEvent);
+        });
 
     }
 
