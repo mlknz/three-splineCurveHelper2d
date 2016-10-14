@@ -10,6 +10,7 @@
       "newIsCap": true,
       "capIsNewExceptions": ["Q"]
     }],
+    "no-unused-vars": [2, { "vars": "local", "args": "after-used" }],
     "no-undef": 2,
     "no-console": 0,
     "no-nested-ternary": 0,

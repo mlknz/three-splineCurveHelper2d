@@ -1,11 +1,28 @@
 const Dat = require('dat-gui');
 
-const createSplineEvent = new Event('createSpline');
 const addJointEvent = new Event('addJoint');
 
 class AppUi {
     constructor() {
         const gui = new Dat.GUI({width: 400});
+
+        const corners = {
+            leftUpX: 1,
+            leftUpY: 2,
+            rightUpX: 2,
+            rightUpY: 2,
+            rightDownX: 2,
+            rightDownY: 1
+        };
+
+        const drawParams = {
+            jointSize: 0.01
+        };
+
+        const curveParams = {
+            nextCurveSegmentsAmount: 200
+        };
+        const createSplineEvent = new CustomEvent('createSpline', { 'detail': curveParams });
 
         const ButtonsFunctions = {
             LoadTexture: () => {
@@ -25,18 +42,6 @@ class AppUi {
                 document.dispatchEvent(addJointEvent);
             }
         };
-        const corners = {
-            leftUpX: 1,
-            leftUpY: 2,
-            rightUpX: 2,
-            rightUpY: 2,
-            rightDownX: 2,
-            rightDownY: 1
-        };
-
-        const drawParams = {
-            jointSize: 0.01
-        };
 
         gui.add(ButtonsFunctions, 'LoadTexture');
         const cornersFolder = gui.addFolder('Corners coordinates');
@@ -47,6 +52,7 @@ class AppUi {
         cornersFolder.add(corners, 'rightDownX');
         cornersFolder.add(corners, 'rightDownY');
 
+        gui.add(curveParams, 'nextCurveSegmentsAmount').min(1).max(1200).step(1);
         gui.add(ButtonsFunctions, 'AddCurve');
         const jointSizeController = gui.add(drawParams, 'jointSize').min(0.001).max(0.18).step(0.001);
         jointSizeController.onFinishChange((value) => {

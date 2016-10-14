@@ -6,8 +6,6 @@ const selectedLineMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 });
 const sphereGeometry = new THREE.SphereGeometry(1, 10, 10);
 const sphereMaterial = new THREE.MeshBasicMaterial({color: 0xaaccaa});
 
-const ARC_SEGMENTS = 200;
-
 class SplinesManager {
     constructor(scene) {
         this.scene = scene;
@@ -27,20 +25,23 @@ class SplinesManager {
         document.addEventListener('changeJointSize', this.changeJointSize.bind(this));
     }
 
-    createSpline() {
+    createSpline(e) {
+        const curveSegmentsAmount = e.detail.nextCurveSegmentsAmount;
+
         const splineCoords = [
             new THREE.Vector2(-0.5, 0),
             new THREE.Vector2(0.5, 0)
         ];
         const curve = new THREE.SplineCurve(splineCoords);
-        const path = new THREE.Path(curve.getPoints(ARC_SEGMENTS));
-        const geometry = path.createPointsGeometry(ARC_SEGMENTS);
+        const path = new THREE.Path(curve.getPoints(curveSegmentsAmount));
+        const geometry = path.createPointsGeometry(curveSegmentsAmount);
         const splineMesh = new THREE.Line(geometry, lineMaterial);
         splineMesh.rotation.x = Math.PI / 2;
         splineMesh.position.y = 0.005;
         splineMesh.userData = {};
         splineMesh.userData.curve = curve;
         splineMesh.userData.myIndex = this.curvesContainer.children.length;
+        splineMesh.userData.segmentsAmount = curveSegmentsAmount;
 
         for (let i = 0; i < splineCoords.length; i++) {
             const jointMesh = this._createJoint(splineCoords[i].x, splineCoords[i].y, this.curvesContainer.children.length, i);
@@ -58,7 +59,7 @@ class SplinesManager {
 
     updateSpline(targetedJoint) {
         if (!(targetedJoint.position instanceof THREE.Vector3)) {
-            console.log('[WOW]', targetedJoint);
+            throw new Error('updateSpline with uncorrect argument:', targetedJoint);
         }
         const splineNumber = targetedJoint.userData.splineNumber;
         const pointIndex = targetedJoint.userData.pointIndex;
@@ -66,10 +67,11 @@ class SplinesManager {
         const curve = splineMesh.userData.curve;
         curve.points[pointIndex] = new THREE.Vector2(targetedJoint.position.x, targetedJoint.position.z);
 
+        const segmentsAmount = splineMesh.userData.segmentsAmount;
         let p = null;
-        for (let i = 0; i < ARC_SEGMENTS + 1; i ++) {
+        for (let i = 0; i < segmentsAmount + 1; i ++) {
             p = splineMesh.geometry.vertices[i];
-            p.copy(curve.getPoint(i / (ARC_SEGMENTS - 1)));
+            p.copy(curve.getPoint(i / (segmentsAmount)));
             p.z = 0;
         }
 
