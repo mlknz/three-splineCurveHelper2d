@@ -1,6 +1,7 @@
 const Dat = require('dat-gui');
 
 const createSplineEvent = new Event('createSpline');
+const addJointEvent = new Event('addJoint');
 
 class AppUi {
     constructor() {
@@ -19,6 +20,9 @@ class AppUi {
             },
             AddCurve: () => {
                 document.dispatchEvent(createSplineEvent);
+            },
+            AddJoint: () => {
+                document.dispatchEvent(addJointEvent);
             }
         };
         const corners = {
@@ -49,6 +53,7 @@ class AppUi {
             const changeJointSizeEvent = new CustomEvent('changeJointSize', { 'detail': value });
             document.dispatchEvent(changeJointSizeEvent);
         });
+        gui.add(ButtonsFunctions, 'AddJoint');
 
     }
 
