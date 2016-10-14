@@ -7,8 +7,8 @@ import AppViewer from './app-viewer';
 import AppUi from './app-ui';
 import SplinesManager from './splinesManager';
 require('three/examples/js/controls/OrbitControls');
-require('three/examples/js/controls/TransformControls');
 require('three/examples/js/controls/DragControls');
+require('./utils/transformControls2d');
 
 (() => {
     if (!webgldetection()) {
