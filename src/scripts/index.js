@@ -7,6 +7,8 @@ import AppViewer from './app-viewer';
 import AppUi from './app-ui';
 import SplinesManager from './splinesManager';
 require('three/examples/js/controls/OrbitControls');
+require('three/examples/js/controls/TransformControls');
+require('three/examples/js/controls/DragControls');
 
 (() => {
     if (!webgldetection()) {
@@ -26,13 +28,29 @@ require('three/examples/js/controls/OrbitControls');
     const camera = appViewer.camera;
 
     const scene = appViewer.scene;
-    const controls = new THREE.OrbitControls(camera, canvas);
+    const orbitControls = new THREE.OrbitControls(camera, canvas);
+    orbitControls.enableDamping = true;
+    orbitControls.rotateSpeed = 0.25;
     const appUi = new AppUi();
 
     const splinesManager = new SplinesManager(scene);
+    const transformControl = new THREE.TransformControls(camera, renderer.domElement);
+    scene.add(transformControl);
+
+    transformControl.addEventListener('objectChange', (e) => {
+        splinesManager.updateSpline(e.target.object);
+    });
+
+    const dragcontrols = new THREE.DragControls(camera, splinesManager.jointsContainer.children, renderer.domElement);
+    dragcontrols.on('hoveron', (e) => {
+        transformControl.attach(e.object);
+    });
+    // dragcontrols.on('hoveroff', (e) => {
+        // if (e)
+        // transformControl.detach();
+    // });
 
     const gl = renderer.getContext();
-
     function resize() {
         const width = canvas.clientWidth;
         const height = canvas.clientHeight;
@@ -51,6 +69,8 @@ require('three/examples/js/controls/OrbitControls');
 
     function animate() {
         resize();
+        transformControl.update();
+        orbitControls.update();
         renderer.render(scene, camera);
         requestAnimationFrame(animate);
     }
