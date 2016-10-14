@@ -75,12 +75,10 @@ class SplinesManager {
 
     changeJointSize(e) {
         this.jointSize = e.detail;
-        this.jointsContainer.children.forEach(splinesCont => {
-            splinesCont.children.forEach(jointMesh => {
-                jointMesh.scale.x = this.jointSize;
-                jointMesh.scale.y = this.jointSize;
-                jointMesh.scale.z = this.jointSize;
-            });
+        this.jointsContainer.children.forEach(jointMesh => {
+            jointMesh.scale.x = this.jointSize;
+            jointMesh.scale.y = this.jointSize;
+            jointMesh.scale.z = this.jointSize;
         });
     }
 }
