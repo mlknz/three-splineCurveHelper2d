@@ -7,6 +7,7 @@ import SceneManager from './sceneManager.js';
 import AppUi from './appUi.js';
 import SplinesManager from './splinesManager.js';
 import SplinesExporter from './utils/splinesExporter.js';
+import SplinesImporter from './utils/splinesImporter.js';
 require('three/examples/js/controls/OrbitControls');
 require('three/examples/js/controls/DragControls');
 require('./utils/transformControls2d');
@@ -51,6 +52,7 @@ require('./utils/transformControls2d');
         // transformControl.detach();
     // });
     const splinesExporter = new SplinesExporter(splinesManager.splineMeshesContainer);
+    const splinesImporter = new SplinesImporter(splinesManager);
 
     const gl = renderer.getContext();
     function resize() {

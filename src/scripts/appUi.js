@@ -38,6 +38,13 @@ class AppUi {
             },
             ImportCurves: () => {
                 console.log('todo: import curves');
+                const fileSelector = document.createElement('input');
+                fileSelector.setAttribute('type', 'file');
+                fileSelector.addEventListener('change', (e) => {
+                    const importSplinesEvent = new CustomEvent('importSplines', { 'detail': e.target.files[0] });
+                    document.dispatchEvent(importSplinesEvent);
+                });
+                fileSelector.click();
             },
             AddCurve: () => {
                 document.dispatchEvent(createSplineEvent);

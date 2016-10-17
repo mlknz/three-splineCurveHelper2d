@@ -16,8 +16,8 @@ class SplinesExporter {
             const curveData = this.processCurveData(splineMesh.userData, exportParams);
             curvesData.push(curveData);
         });
-        console.log(curvesData[0].points[0]);
-        const dataToWrite = JSON.stringify(curvesData, null, 4);
+        // console.log(curvesData[0].points[0]);
+        const dataToWrite = JSON.stringify({curves: curvesData}, null, 4);
         if (exportParams.toFile) this.writeDataToFile(dataToWrite);
         if (exportParams.toConsole) console.log(dataToWrite);
     }
