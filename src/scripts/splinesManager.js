@@ -10,11 +10,11 @@ class SplinesManager {
     constructor(scene) {
         this.scene = scene;
         this.jointsContainer = new THREE.Object3D();
-        this.curvesContainer = new THREE.Object3D();
+        this.splineMeshesContainer = new THREE.Object3D();
         this.jointsContainer.name = 'jointsContainer';
-        this.curvesContainer.name = 'curvesContainer';
+        this.splineMeshesContainer.name = 'splineMeshesContainer';
         this.scene.add(this.jointsContainer);
-        this.scene.add(this.curvesContainer);
+        this.scene.add(this.splineMeshesContainer);
         this.splines = [];
 
         this.jointSize = 0.01;
@@ -40,18 +40,18 @@ class SplinesManager {
         splineMesh.position.y = 0.005;
         splineMesh.userData = {};
         splineMesh.userData.curve = curve;
-        splineMesh.userData.myIndex = this.curvesContainer.children.length;
+        splineMesh.userData.myIndex = this.splineMeshesContainer.children.length;
         splineMesh.userData.segmentsAmount = curveSegmentsAmount;
 
         for (let i = 0; i < splineCoords.length; i++) {
-            const jointMesh = this._createJoint(splineCoords[i].x, splineCoords[i].y, this.curvesContainer.children.length, i);
+            const jointMesh = this._createJoint(splineCoords[i].x, splineCoords[i].y, this.splineMeshesContainer.children.length, i);
             this.jointsContainer.add(jointMesh);
         }
 
-        this.curvesContainer.add(splineMesh);
+        this.splineMeshesContainer.add(splineMesh);
 
         this.selectedSpline = splineMesh;
-        this.curvesContainer.children.forEach(curveMesh => {
+        this.splineMeshesContainer.children.forEach(curveMesh => {
             curveMesh.material = lineMaterial;
         });
         splineMesh.material = selectedLineMaterial;
@@ -63,7 +63,7 @@ class SplinesManager {
         }
         const splineNumber = targetedJoint.userData.splineNumber;
         const pointIndex = targetedJoint.userData.pointIndex;
-        const splineMesh = this.curvesContainer.children[splineNumber];
+        const splineMesh = this.splineMeshesContainer.children[splineNumber];
         const curve = splineMesh.userData.curve;
         curve.points[pointIndex] = new THREE.Vector2(targetedJoint.position.x, targetedJoint.position.z);
 
@@ -77,7 +77,7 @@ class SplinesManager {
 
         splineMesh.geometry.verticesNeedUpdate = true;
         this.selectedSpline = splineMesh;
-        this.curvesContainer.children.forEach(curveMesh => {
+        this.splineMeshesContainer.children.forEach(curveMesh => {
             curveMesh.material = lineMaterial;
         });
         splineMesh.material = selectedLineMaterial;

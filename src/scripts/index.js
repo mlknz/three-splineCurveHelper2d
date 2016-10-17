@@ -1,11 +1,12 @@
 const THREE = require('three');
 window.THREE = THREE;
-const webgldetection = require('./webgldetection');
+const webgldetection = require('./utils/webgldetection');
 
 import {rendererConfig} from './config.js';
-import AppViewer from './app-viewer';
-import AppUi from './app-ui';
-import SplinesManager from './splinesManager';
+import SceneManager from './sceneManager.js';
+import AppUi from './appUi.js';
+import SplinesManager from './splinesManager.js';
+import SplinesExporter from './utils/splinesExporter.js';
 require('three/examples/js/controls/OrbitControls');
 require('three/examples/js/controls/DragControls');
 require('./utils/transformControls2d');
@@ -24,13 +25,13 @@ require('./utils/transformControls2d');
     canvas.className = 'canvas';
     document.body.appendChild(canvas);
 
-    const appViewer = new AppViewer(canvas.clientWidth / canvas.clientHeight);
-    const camera = appViewer.camera;
-
-    const scene = appViewer.scene;
+    const sceneManager = new SceneManager(canvas.clientWidth / canvas.clientHeight);
+    const camera = sceneManager.camera;
+    const scene = sceneManager.scene;
     const orbitControls = new THREE.OrbitControls(camera, canvas);
     orbitControls.enableDamping = true;
     orbitControls.rotateSpeed = 0.25;
+
     const appUi = new AppUi();
 
     const splinesManager = new SplinesManager(scene);
@@ -49,6 +50,7 @@ require('./utils/transformControls2d');
         // if (e)
         // transformControl.detach();
     // });
+    const splinesExporter = new SplinesExporter(splinesManager.splineMeshesContainer);
 
     const gl = renderer.getContext();
     function resize() {

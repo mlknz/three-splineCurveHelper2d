@@ -1,6 +1,6 @@
 const THREE = require('three');
 
-import {cameraConfig} from '../config.js';
+import {cameraConfig} from './config.js';
 
 class AppViewer {
     constructor(aspectRatio) {
