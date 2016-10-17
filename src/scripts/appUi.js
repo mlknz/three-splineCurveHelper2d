@@ -8,10 +8,12 @@ class AppUi {
 
         const exportParams = {
             leftUpXCoord: 1,
-            leftUpYCoord: 2,
-            rightUpXCoord: 2,
-            rightUpYCoord: 2,
-            applyTransform: false
+            leftUpYCoord: 1,
+            rightUpXCoord: 1,
+            rightUpYCoord: -1,
+            applyTransform: false,
+            toFile: false,
+            toConsole: false
         };
 
         const drawParams = {
@@ -66,7 +68,10 @@ class AppUi {
         exportFolder.add(exportParams, 'rightUpXCoord');
         exportFolder.add(exportParams, 'rightUpYCoord');
         exportFolder.add(exportParams, 'applyTransform');
+        exportFolder.add(exportParams, 'toFile');
+        exportFolder.add(exportParams, 'toConsole');
         exportFolder.add(ButtonsFunctions, 'Export');
+        exportFolder.open();
     }
 
 }

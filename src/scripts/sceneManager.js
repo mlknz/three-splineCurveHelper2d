@@ -8,8 +8,8 @@ class AppViewer {
 
         this.camera = new THREE.PerspectiveCamera(cameraConfig.fov, aspectRatio || 1, cameraConfig.near, cameraConfig.far);
         this.camera.position.fromArray(cameraConfig.position);
-        this.camera.lookAt(new THREE.Vector3(0, 0, 0));
 
+        this.camera.lookAt(new THREE.Vector3(0, 0, 0));
         const boxGeometry = new THREE.BoxGeometry(1, 0.2, 1);
         const boxMaterial = new THREE.MeshBasicMaterial({color: 0x332222});
         const box = new THREE.Mesh(boxGeometry, boxMaterial);
