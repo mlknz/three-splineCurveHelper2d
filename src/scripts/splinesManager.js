@@ -151,7 +151,7 @@ class SplinesManager {
         if (this.selectedJoint && this.selectedJoint.userData.splineUuid === splineMesh.uuid) {
             newJointIndex = this.selectedJoint.userData.pointIndex + 1;
         }
-        const spawnPos = new THREE.Vector2(0.6, 0.1);
+        const spawnPos = new THREE.Vector2();
         if (newJointIndex < curve.points.length) {
             spawnPos.x = (curve.points[newJointIndex - 1].x + curve.points[newJointIndex].x) / 2;
             spawnPos.y = (curve.points[newJointIndex - 1].y + curve.points[newJointIndex].y) / 2;
@@ -161,6 +161,9 @@ class SplinesManager {
                     joint.userData.pointIndex += 1;
                 }
             });
+        } else {
+            spawnPos.x = 1.2 * curve.points[curve.points.length - 1].x - 0.2 * curve.points[curve.points.length - 2].x;
+            spawnPos.y = 1.2 * curve.points[curve.points.length - 1].y - 0.2 * curve.points[curve.points.length - 2].y;
         }
 
         const jointMesh = this._createJoint(spawnPos, splineMesh.uuid, newJointIndex);
