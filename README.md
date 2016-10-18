@@ -1,6 +1,6 @@
 # three-splineHelper2d.
 
-A tool for constructing 2d three.js splines. Main purpose: creating splines for three.js scenes.
+A tool for constructing 2d three.js splines and exporting them with transform applied.
 
 Usage:
 
