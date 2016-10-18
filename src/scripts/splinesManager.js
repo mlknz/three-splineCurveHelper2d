@@ -29,7 +29,7 @@ class SplinesManager {
 
         document.addEventListener('createSpline', this.createSpline.bind(this));
         document.addEventListener('removeSpline', this.removeSpline.bind(this));
-        document.addEventListener('addJoint', this.addJoint.bind(this));
+        document.addEventListener('insertJoint', this.insertJoint.bind(this));
         document.addEventListener('removeJoint', this.removeJoint.bind(this));
         document.addEventListener('changeJointSize', this.changeJointSize.bind(this));
         document.addEventListener('updateSegmentsAmount', this.updateSegmentsAmount.bind(this));
@@ -142,7 +142,7 @@ class SplinesManager {
         this.selectedJoint = obj;
     }
 
-    addJoint() {
+    insertJoint() {
         if (!this.selectedSpline) return;
         const splineMesh = this.selectedSpline;
         const curve = splineMesh.userData.curve;

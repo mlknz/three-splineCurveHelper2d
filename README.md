@@ -1,20 +1,13 @@
 # three-splineHelper2d.
 
-A tool for constructing 2d three.js splines. Main purpose: creating splines for other three.js scenes.
+A tool for constructing 2d three.js splines. Main purpose: creating splines for three.js scenes.
 
 Usage:
 
 1. Map a texture from hard drive on 1x1 plane.
-2. Draw multiple THREE.SplineCurve's on it (set next curve segments amount, add curves, add joints, move joints).
-3. Export curves in local coordinates (with applyTransform flag unchecked) to File or console.
-4. Import curves (should be exported according to previous Item).
-5. Export curves with applied transform: set world coordinates of left up and right up texture corners and export with applyTransform flag checked.
-
-Unimplemented features:
-
-1. Removing splines.
-2. Removing joints.
-3. Modifying segmentsAmount of existing splines.
+2. Draw multiple THREE.SplineCurve's on it (add/remove curves/joints, tweak curve segments amount, move joints).
+3. Export curves in local coordinates or with applied transform to File or console. Transform is set by setting desired coordinates of left up and right up texture corners.
+4. Import curves (no transforms applied).
 
 Export file is in JSON format. Example:
 {
