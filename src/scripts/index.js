@@ -47,10 +47,14 @@ require('./utils/transformControls2d');
     dragcontrols.on('hoveron', (e) => {
         transformControl.attach(e.object);
     });
-    // dragcontrols.on('hoveroff', (e) => {
-        // if (e)
-        // transformControl.detach();
-    // });
+    document.addEventListener('removeJoint', () => {
+        transformControl.detach();
+    });
+    document.addEventListener('removeSpline', () => {
+        transformControl.detach();
+    });
+
+
     const splinesExporter = new SplinesExporter(splinesManager.splineMeshesContainer);
     const splinesImporter = new SplinesImporter(splinesManager);
 

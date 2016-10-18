@@ -26,7 +26,9 @@ class SplinesManager {
         this.selectedSpline = null;
 
         document.addEventListener('createSpline', this.createSpline.bind(this));
+        document.addEventListener('removeSpline', this.removeSpline.bind(this));
         document.addEventListener('addJoint', this.addJoint.bind(this));
+        document.addEventListener('removeJoint', this.removeJoint.bind(this));
         document.addEventListener('changeJointSize', this.changeJointSize.bind(this));
     }
 
@@ -42,11 +44,10 @@ class SplinesManager {
         splineMesh.position.y = 0.005;
         splineMesh.userData = {};
         splineMesh.userData.curve = curve;
-        splineMesh.userData.myIndex = this.splineMeshesContainer.children.length;
         splineMesh.userData.segmentsAmount = curveSegmentsAmount;
 
         for (let i = 0; i < splineCoords.length; i++) {
-            const jointMesh = this._createJoint(splineCoords[i].x, splineCoords[i].y, this.splineMeshesContainer.children.length, i);
+            const jointMesh = this._createJoint(splineCoords[i].x, splineCoords[i].y, splineMesh.uuid, i);
             this.jointsContainer.add(jointMesh);
         }
 
@@ -59,13 +60,39 @@ class SplinesManager {
         splineMesh.material = selectedLineMaterial;
     }
 
+    removeSpline() {
+        if (!this.selectedSpline) return;
+
+        const spl = this.selectedSpline;
+        const trashJoints = [];
+
+        this.jointsContainer.children.forEach(joint => {
+            if (joint.userData.splineUuid === spl.uuid) {
+                trashJoints.push(joint);
+            }
+        });
+
+        trashJoints.forEach(joint => {
+            joint.parent.remove(joint);
+        });
+        this.splineMeshesContainer.remove(spl);
+        this.selectedSpline = this.splineMeshesContainer.children[0] || null;
+    }
+
     updateSpline(targetedJoint) {
         if (!(targetedJoint.position instanceof THREE.Vector3)) {
             throw new Error('updateSpline with uncorrect argument:', targetedJoint);
         }
-        const splineNumber = targetedJoint.userData.splineNumber;
+        const splineUuid = targetedJoint.userData.splineUuid;
         const pointIndex = targetedJoint.userData.pointIndex;
-        const splineMesh = this.splineMeshesContainer.children[splineNumber];
+        let splineMesh = null;
+        this.splineMeshesContainer.children.forEach(spl => {
+            if (spl.uuid === splineUuid) splineMesh = spl;
+        });
+        if (!splineMesh) {
+            console.warn('couldn\'t update spline');
+            return;
+        }
         const curve = splineMesh.userData.curve;
         curve.points[pointIndex] = new THREE.Vector2(targetedJoint.position.x, targetedJoint.position.z);
 
@@ -91,13 +118,17 @@ class SplinesManager {
         const curve = splineMesh.userData.curve;
         const newJointIndex = curve.points.length;
 
-        const jointMesh = this._createJoint(0.6, 0.1, splineMesh.userData.myIndex, newJointIndex);
+        const jointMesh = this._createJoint(0.6, 0.1, splineMesh.uuid, newJointIndex);
 
         curve.points[newJointIndex] = new THREE.Vector2(jointMesh.position.x, jointMesh.position.z);
         this.updateSpline(jointMesh);
     }
 
-    _createJoint(posX, posY, splineNumber, pointIndex) {
+    removeJoint() {
+        console.log('todo: implement joint removal');
+    }
+
+    _createJoint(posX, posY, splineUuid, pointIndex) {
         const jointMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
         this.jointsContainer.add(jointMesh);
         jointMesh.position.x = posX;
@@ -107,8 +138,7 @@ class SplinesManager {
         jointMesh.scale.y = this.jointSize;
         jointMesh.scale.z = this.jointSize;
         jointMesh.userData = {};
-
-        jointMesh.userData.splineNumber = splineNumber;
+        jointMesh.userData.splineUuid = splineUuid;
         jointMesh.userData.pointIndex = pointIndex;
         return jointMesh;
     }

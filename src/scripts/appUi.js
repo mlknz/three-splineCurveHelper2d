@@ -1,7 +1,5 @@
 const Dat = require('dat-gui');
 
-const addJointEvent = new Event('addJoint');
-
 class AppUi {
     constructor() {
         const gui = new Dat.GUI({width: 400});
@@ -24,7 +22,12 @@ class AppUi {
             nextCurveSegmentsAmount: 200,
             points: null
         };
+
+        const addJointEvent = new Event('addJoint');
+        const removeJointEvent = new Event('removeJoint');
         const createSplineEvent = new CustomEvent('createSpline', { 'detail': curveParams });
+        const removeSplineEvent = new Event('removeSpline');
+
         const exportSplinesEvent = new CustomEvent('exportSplines', { 'detail': exportParams });
 
         const ButtonsFunctions = {
@@ -49,8 +52,14 @@ class AppUi {
             AddCurve: () => {
                 document.dispatchEvent(createSplineEvent);
             },
+            RemoveCurve: () => {
+                document.dispatchEvent(removeSplineEvent);
+            },
             AddJoint: () => {
                 document.dispatchEvent(addJointEvent);
+            },
+            RemoveJoint: () => {
+                document.dispatchEvent(removeJointEvent);
             },
             Export: () => {
                 document.dispatchEvent(exportSplinesEvent);
@@ -62,12 +71,14 @@ class AppUi {
 
         gui.add(curveParams, 'nextCurveSegmentsAmount').min(1).max(1200).step(1);
         gui.add(ButtonsFunctions, 'AddCurve');
+        gui.add(ButtonsFunctions, 'RemoveCurve');
         const jointSizeController = gui.add(drawParams, 'jointSize').min(0.001).max(0.18).step(0.001);
         jointSizeController.onChange((value) => {
             const changeJointSizeEvent = new CustomEvent('changeJointSize', { 'detail': value });
             document.dispatchEvent(changeJointSizeEvent);
         });
         gui.add(ButtonsFunctions, 'AddJoint');
+        gui.add(ButtonsFunctions, 'RemoveJoint');
 
         const exportFolder = gui.addFolder('Export');
         exportFolder.add(exportParams, 'leftUpXCoord');
