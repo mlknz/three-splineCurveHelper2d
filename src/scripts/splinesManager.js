@@ -32,6 +32,7 @@ class SplinesManager {
         document.addEventListener('addJoint', this.addJoint.bind(this));
         document.addEventListener('removeJoint', this.removeJoint.bind(this));
         document.addEventListener('changeJointSize', this.changeJointSize.bind(this));
+        document.addEventListener('updateSegmentsAmount', this.updateSegmentsAmount.bind(this));
     }
 
     createSpline(e) {
@@ -79,6 +80,29 @@ class SplinesManager {
         });
         this.splineMeshesContainer.remove(spl);
         this.selectedSpline = this.splineMeshesContainer.children[0] || null;
+    }
+
+    updateSegmentsAmount(e) {
+        const segmentsAmount = e.detail.nextCurveSegmentsAmount;
+        if (!this.selectedSpline) return;
+
+        const oldSpline = this.selectedSpline;
+        const uuid = oldSpline.uuid;
+
+        const curve = this.selectedSpline.userData.curve;
+        const path = new THREE.Path(curve.getPoints(segmentsAmount));
+        const geometry = path.createPointsGeometry(segmentsAmount);
+        const splineMesh = new THREE.Line(geometry, selectedLineMaterial);
+        splineMesh.rotation.x = Math.PI / 2;
+        splineMesh.position.y = 0.005;
+        splineMesh.userData = {};
+        splineMesh.userData.curve = curve;
+        splineMesh.userData.segmentsAmount = segmentsAmount;
+        this.splineMeshesContainer.add(splineMesh);
+
+        this.selectedSpline = splineMesh;
+        oldSpline.parent.remove(oldSpline);
+        splineMesh.uuid = uuid;
     }
 
     updateSpline(targetedJoint) {

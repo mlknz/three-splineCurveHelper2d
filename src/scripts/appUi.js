@@ -27,6 +27,7 @@ class AppUi {
         const removeJointEvent = new Event('removeJoint');
         const createSplineEvent = new CustomEvent('createSpline', { 'detail': curveParams });
         const removeSplineEvent = new Event('removeSpline');
+        const updateSegmentsAmountEvent = new CustomEvent('updateSegmentsAmount', { 'detail': curveParams });
 
         const exportSplinesEvent = new CustomEvent('exportSplines', { 'detail': exportParams });
 
@@ -61,6 +62,9 @@ class AppUi {
             RemoveJoint: () => {
                 document.dispatchEvent(removeJointEvent);
             },
+            SetCurSegmentsAmount: () => {
+                document.dispatchEvent(updateSegmentsAmountEvent);
+            },
             Export: () => {
                 document.dispatchEvent(exportSplinesEvent);
             }
@@ -70,6 +74,7 @@ class AppUi {
         gui.add(ButtonsFunctions, 'ImportCurves');
 
         gui.add(curveParams, 'nextCurveSegmentsAmount').min(1).max(1200).step(1);
+        gui.add(ButtonsFunctions, 'SetCurSegmentsAmount');
         gui.add(ButtonsFunctions, 'AddCurve');
         gui.add(ButtonsFunctions, 'RemoveCurve');
         const jointSizeController = gui.add(drawParams, 'jointSize').min(0.001).max(0.18).step(0.001);
