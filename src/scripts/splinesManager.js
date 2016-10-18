@@ -18,6 +18,7 @@ class SplinesManager {
         this.splines = [];
 
         this.jointSize = 0.01;
+        this.defaultCurveSegmentsAmount = 200;
         this.defaultSplinePoints = [
             new THREE.Vector2(-0.5, 0),
             new THREE.Vector2(0.5, 0)
@@ -30,8 +31,8 @@ class SplinesManager {
     }
 
     createSpline(e) {
-        const curveSegmentsAmount = e.detail.nextCurveSegmentsAmount;
-        const splineCoords = e.detail.points || this.defaultSplinePoints;
+        const curveSegmentsAmount = e.detail.nextCurveSegmentsAmount || this.defaultCurveSegmentsAmount;
+        const splineCoords = e.detail.points || this.defaultSplinePoints.slice();
 
         const curve = new THREE.SplineCurve(splineCoords);
         const path = new THREE.Path(curve.getPoints(curveSegmentsAmount));

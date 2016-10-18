@@ -21,7 +21,8 @@ class AppUi {
         };
 
         const curveParams = {
-            nextCurveSegmentsAmount: 200
+            nextCurveSegmentsAmount: 200,
+            points: null
         };
         const createSplineEvent = new CustomEvent('createSpline', { 'detail': curveParams });
         const exportSplinesEvent = new CustomEvent('exportSplines', { 'detail': exportParams });
@@ -37,7 +38,6 @@ class AppUi {
                 fileSelector.click();
             },
             ImportCurves: () => {
-                console.log('todo: import curves');
                 const fileSelector = document.createElement('input');
                 fileSelector.setAttribute('type', 'file');
                 fileSelector.addEventListener('change', (e) => {
