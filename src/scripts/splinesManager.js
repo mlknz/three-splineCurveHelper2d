@@ -50,7 +50,7 @@ class SplinesManager {
         splineMesh.userData.segmentsAmount = curveSegmentsAmount;
 
         for (let i = 0; i < splineCoords.length; i++) {
-            const jointMesh = this._createJoint(splineCoords[i].x, splineCoords[i].y, splineMesh.uuid, i);
+            const jointMesh = this._createJoint(splineCoords[i], splineMesh.uuid, i);
             this.jointsContainer.add(jointMesh);
         }
 
@@ -146,11 +146,25 @@ class SplinesManager {
         if (!this.selectedSpline) return;
         const splineMesh = this.selectedSpline;
         const curve = splineMesh.userData.curve;
-        const newJointIndex = curve.points.length;
+        let newJointIndex = curve.points.length;
 
-        const jointMesh = this._createJoint(0.6, 0.1, splineMesh.uuid, newJointIndex);
+        if (this.selectedJoint && this.selectedJoint.userData.splineUuid === splineMesh.uuid) {
+            newJointIndex = this.selectedJoint.userData.pointIndex + 1;
+        }
+        const spawnPos = new THREE.Vector2(0.6, 0.1);
+        if (newJointIndex < curve.points.length) {
+            spawnPos.x = (curve.points[newJointIndex - 1].x + curve.points[newJointIndex].x) / 2;
+            spawnPos.y = (curve.points[newJointIndex - 1].y + curve.points[newJointIndex].y) / 2;
 
-        curve.points[newJointIndex] = new THREE.Vector2(jointMesh.position.x, jointMesh.position.z);
+            this.jointsContainer.children.forEach(joint => {
+                if (joint.userData.splineUuid === splineMesh.uuid && joint.userData.pointIndex >= newJointIndex) {
+                    joint.userData.pointIndex += 1;
+                }
+            });
+        }
+
+        const jointMesh = this._createJoint(spawnPos, splineMesh.uuid, newJointIndex);
+        curve.points.splice(newJointIndex, 0, new THREE.Vector2(jointMesh.position.x, jointMesh.position.z));
         this.updateSpline(jointMesh);
     }
 
@@ -189,12 +203,12 @@ class SplinesManager {
         this.updateSpline(braveJoint);
     }
 
-    _createJoint(posX, posY, splineUuid, pointIndex) {
+    _createJoint(pos, splineUuid, pointIndex) {
         const jointMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
         this.jointsContainer.add(jointMesh);
-        jointMesh.position.x = posX;
+        jointMesh.position.x = pos.x;
         jointMesh.position.y = 0.005;
-        jointMesh.position.z = posY;
+        jointMesh.position.z = pos.y;
         jointMesh.scale.x = this.jointSize;
         jointMesh.scale.y = this.jointSize;
         jointMesh.scale.z = this.jointSize;
