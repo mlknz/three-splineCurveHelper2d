@@ -46,6 +46,7 @@ require('./utils/transformControls2d');
     const dragcontrols = new THREE.DragControls(camera, splinesManager.jointsContainer.children, renderer.domElement);
     dragcontrols.on('hoveron', (e) => {
         transformControl.attach(e.object);
+        splinesManager.selectJoint(e.object);
     });
     document.addEventListener('removeJoint', () => {
         transformControl.detach();
@@ -53,7 +54,6 @@ require('./utils/transformControls2d');
     document.addEventListener('removeSpline', () => {
         transformControl.detach();
     });
-
 
     const splinesExporter = new SplinesExporter(splinesManager.splineMeshesContainer);
     const splinesImporter = new SplinesImporter(splinesManager);

@@ -23,6 +23,8 @@ class SplinesManager {
             new THREE.Vector2(-0.5, 0),
             new THREE.Vector2(0.5, 0)
         ];
+
+        this.selectedJoint = null;
         this.selectedSpline = null;
 
         document.addEventListener('createSpline', this.createSpline.bind(this));
@@ -112,6 +114,10 @@ class SplinesManager {
         splineMesh.material = selectedLineMaterial;
     }
 
+    selectJoint(obj) {
+        this.selectedJoint = obj;
+    }
+
     addJoint() {
         if (!this.selectedSpline) return;
         const splineMesh = this.selectedSpline;
@@ -125,7 +131,38 @@ class SplinesManager {
     }
 
     removeJoint() {
-        console.log('todo: implement joint removal');
+        if (!this.selectedJoint) return;
+        const fatedJoint = this.selectedJoint;
+        const pointIndex = fatedJoint.userData.pointIndex;
+        const splineUuid = fatedJoint.userData.splineUuid;
+
+        let splineMesh = null;
+        this.splineMeshesContainer.children.forEach(spl => {
+            if (spl.uuid === splineUuid) splineMesh = spl;
+        });
+
+        if (!splineMesh) {
+            console.warn('couldn\'t remove fatedJoint (spline doesn\'t exist)');
+            return;
+        }
+
+        const splinePoints = splineMesh.userData.curve.points;
+        if (splinePoints.length < 3) return;
+
+        splinePoints.splice(pointIndex, 1);
+        this.selectedJoint = null;
+        fatedJoint.parent.remove(fatedJoint);
+
+        let braveJoint = null;
+        this.jointsContainer.children.forEach(joint => {
+            if (joint.userData.splineUuid === splineUuid) {
+                braveJoint = joint;
+                if (joint.userData.pointIndex > pointIndex) {
+                    joint.userData.pointIndex -= 1;
+                }
+            }
+        });
+        this.updateSpline(braveJoint);
     }
 
     _createJoint(posX, posY, splineUuid, pointIndex) {
