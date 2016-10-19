@@ -44,7 +44,7 @@ class SplinesManager {
         const geometry = path.createPointsGeometry(curveSegmentsAmount);
         const splineMesh = new THREE.Line(geometry, lineMaterial);
         splineMesh.rotation.x = Math.PI / 2;
-        splineMesh.position.y = 0.005;
+        splineMesh.position.y = 0.0003;
         splineMesh.userData = {};
         splineMesh.userData.curve = curve;
         splineMesh.userData.segmentsAmount = curveSegmentsAmount;
@@ -94,7 +94,7 @@ class SplinesManager {
         const geometry = path.createPointsGeometry(segmentsAmount);
         const splineMesh = new THREE.Line(geometry, selectedLineMaterial);
         splineMesh.rotation.x = Math.PI / 2;
-        splineMesh.position.y = 0.005;
+        splineMesh.position.y = 0.0003;
         splineMesh.userData = {};
         splineMesh.userData.curve = curve;
         splineMesh.userData.segmentsAmount = segmentsAmount;
@@ -210,7 +210,7 @@ class SplinesManager {
         const jointMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
         this.jointsContainer.add(jointMesh);
         jointMesh.position.x = pos.x;
-        jointMesh.position.y = 0.005;
+        jointMesh.position.y = 0.0003;
         jointMesh.position.z = pos.y;
         jointMesh.scale.x = this.jointSize;
         jointMesh.scale.y = this.jointSize;
