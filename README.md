@@ -2,6 +2,8 @@
 
 A tool for constructing 2d three.js splines and exporting them with transform applied.
 
+Live version: https://mlknz.github.io/three-splineCurveHelper2d/
+
 Usage:
 
 1. Map a texture from hard drive on 1x1 plane.
